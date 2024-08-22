@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Words</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            cursor: pointer;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="keyDisplay"></h1>
+    <p id="scoreDisplay"></p>
+    <input type="text" id="inputField" placeholder="Enter a word" />
+    <label>
+        <input type="checkbox" id="randomOrderCheckbox">
+        Scattered order
+    </label>
+    <button id="showValueButton">Show word</button>
+</div>
+
+<script>
+    const map = {
+        fare: { value: "fatto", count: 0 },
+        dire: { value: "detto", count: 0 },
+        leggere: { value: "letto", count: 0 },
+        correggere: { value: "corretto", count: 0 },
+        scrivere: { value: "scritto", count: 0 },
+        friggere: { value: "fritto", count: 0 },
+        rompere: { value: "rotto", count: 0 },
+        cuocere: { value: "cotto", count: 0 },
+        tradurre: { value: "tradotto", count: 0 },
+        aprire: { value: "aperto", count: 0 },
+        offrire: { value: "offerto", count: 0 },
+        soffrire: { value: "sofferto", count: 0 },
+        coprire: { value: "coperto", count: 0 },
+        scoprire: { value: "scoperto", count: 0 },
+        morire: { value: "morto", count: 0 },
+        accorgersi: { value: "accorto", count: 0 },
+        piangere: { value: "pianto", count: 0 },
+        spegnere: { value: "spento", count: 0 },
+        spingere: { value: "spinto", count: 0 },
+        vincere: { value: "vinto", count: 0 },
+        aggiungere: { value: "aggiunto", count: 0 },
+        dipingere: { value: "dipinto", count: 0 },
+        assumere: { value: "assunto", count: 0 },
+        scegliere: { value: "scelto", count: 0 },
+        togliere: { value: "tolto", count: 0 },
+        raccogliere: { value: "raccolto", count: 0 },
+        sciogliere: { value: "sciolto", count: 0 },
+        risolvere: { value: "risolto", count: 0 },
+        rivolgersi: { value: "rivolto", count: 0 },
+        prendere: { value: "preso", count: 0 },
+        rendere: { value: "reso", count: 0 },
+        accendere: { value: "acceso", count: 0 },
+        spendere: { value: "speso", count: 0 },
+        scendere: { value: "sceso", count: 0 },
+        offendere: { value: "offeso", count: 0 },
+        decidere: { value: "deciso", count: 0 },
+        uccidere: { value: "ucciso", count: 0 },
+        ridere: { value: "riso", count: 0 },
+        dividere: { value: "diviso", count: 0 },
+        chiudere: { value: "chiuso", count: 0 },
+        concludere: { value: "concluso", count: 0 },
+        diffondere: { value: "diffuso", count: 0 },
+        rimanere: { value: "rimasto", count: 0 },
+        chiedere: { value: "chiesto", count: 0 },
+        rispondere: { value: "risposto", count: 0 },
+        comporre: { value: "composto", count: 0 },
+        proporre: { value: "proposto", count: 0 },
+        disporre: { value: "disposto", count: 0 },
+        vedere: { value: "visto", count: 0 },
+        perdere: { value: "perso", count: 0 },
+        correre: { value: "corso", count: 0 },
+        mettere: { value: "messo", count: 0 },
+        succedere: { value: "successo", count: 0 },
+        permettere: { value: "permesso", count: 0 },
+        esprimere: { value: "espresso", count: 0 },
+        muovere: { value: "mosso", count: 0 },
+        discutere: { value: "discusso", count: 0 },
+        essere: { value: "stato", count: 0 },
+        vivere: { value: "vissuto", count: 0 },
+        venire: { value: "venuto", count: 0 },
+        nascere: { value: "nato", count: 0 }
+    };
+
+    let currentKey = "fare";
+    const keyDisplay = document.getElementById('keyDisplay');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const inputField = document.getElementById('inputField');
+    const showValueButton = document.getElementById('showValueButton');
+    const randomOrderCheckbox = document.getElementById('randomOrderCheckbox');
+
+    function updateDisplay() {
+        keyDisplay.textContent = `${currentKey}`;
+        scoreDisplay.textContent = `Number of points: ${map[currentKey].count}`;
+    }
+
+    function getNextKey() {
+        const keys = Object.keys(map);
+        
+        let minCount = Math.min(...keys.map(key => map[key].count));
+        
+        let minCountKeys = keys.filter(key => map[key].count === minCount);
+        
+        if (randomOrderCheckbox.checked) {
+            let randomIndex = Math.floor(Math.random() * minCountKeys.length);
+            return minCountKeys[randomIndex];
+        } else {
+            let currentIndex = minCountKeys.indexOf(currentKey);
+            return minCountKeys[(currentIndex + 1) % minCountKeys.length];
+        }
+    }
+
+    inputField.addEventListener('input', function () {
+        if (inputField.value === map[currentKey].value) {
+            map[currentKey].count += 1;  
+            currentKey = getNextKey();
+            inputField.value = '';
+            updateDisplay();
+        }
+    });
+
+    showValueButton.addEventListener('click', function () {
+        alert(map[currentKey].value);
+    });
+
+    updateDisplay();
+</script>
+
+</body>
+</html>
